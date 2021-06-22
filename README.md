@@ -19,4 +19,8 @@ consumer = KafkaBridgeConsumer(
     bootstrap_server=CONFIG['kafka_bridge']['url'],
     consumer_name='consumer-name',
 )
+
+async for rec in consumer.get_records():
+    print(rec['value'])
+    await consumer.commit()
 ```
