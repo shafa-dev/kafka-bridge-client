@@ -1,6 +1,10 @@
 # kafka-bridge-client
 Python async client for Strimzi Kafka Bridge. Package include consumer only.
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)](https://github.com/shafa-dev/kafka-bridge-client/issues)
+[![PyPI version](https://badge.fury.io/py/create-aio-app.svg)](https://badge.fury.io/py/kafka-bridge-client)
+
 ## Install
 ```
 pip install kafka-bridge-client
