@@ -16,11 +16,12 @@ from kafka_bridge_client import KafkaBridgeConsumer
 
 
 consumer = KafkaBridgeConsumer(
-    CONFIG['topics']['name'],
-    group_id=CONFIG['group_id'],
+    'topic1',
+    'topic2',
+    group_id='my-group,
     auto_offset_reset='earliest',
     enable_auto_commit=False,
-    bootstrap_server=CONFIG['kafka_bridge']['url'],
+    bootstrap_server='your-kafka-bridge-url',
     consumer_name='consumer-name',
 )
 
