@@ -56,6 +56,7 @@ class KafkaBridgeConsumer:
         consumer_name: str,
         sleep_interval_seconds: int = 2,
         client_timeout_seconds: int = 15,
+        headers: t.Dict[str, t.Any] = None,
     ) -> None:
         self._group_id = group_id
         self._consumer_name = consumer_name
@@ -72,6 +73,7 @@ class KafkaBridgeConsumer:
         self._sleep_interval_seconds = sleep_interval_seconds
         self._bootstrap_server = bootstrap_server
         self._client_timeout_seconds = client_timeout_seconds
+        self._headers = headers or {}
 
     async def _request(
         self,
@@ -84,12 +86,13 @@ class KafkaBridgeConsumer:
     ) -> Response:
         params = params or {}
         data = data or {}
-        headers = headers or {}
+        _headers = headers or {}
+        _headers.update(self._headers)
         url = urljoin(self._bootstrap_server, path)
 
         async with aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(self._client_timeout_seconds),
-            headers=headers,
+            headers=_headers,
         ) as session:
             try:
                 resp = await session.request(
