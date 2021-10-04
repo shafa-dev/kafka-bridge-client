@@ -57,17 +57,27 @@ class KafkaBridgeConsumer:
         sleep_interval_seconds: int = 2,
         client_timeout_seconds: int = 15,
         headers: t.Dict[str, t.Any] = None,
+        proxy: t.Literal['strimzi', 'confluent'] = 'strimzi'
     ) -> None:
         self._group_id = group_id
         self._consumer_name = consumer_name
         self._topics = topics
         self._offsets: t.Dict[str, t.Dict[str, t.Any]] = {}
-        self._config = {
-            'auto.offset.reset': auto_offset_reset,
-            'enable.auto.commit': enable_auto_commit,
-            'format': 'binary',
-            'name': consumer_name,
-        }
+        if proxy == 'strimzi':
+            self._config = {
+                'auto.offset.reset': auto_offset_reset,
+                'enable.auto.commit': enable_auto_commit,
+                'format': 'binary',
+                'name': consumer_name,
+            }
+        elif proxy == 'confluent':
+            self._config = {
+                'auto.offset.reset': auto_offset_reset,
+                'auto.commit.enable': 'true' if enable_auto_commit else 'false',
+                'format': 'binary',
+                'name': consumer_name,
+            }
+
         # Delay between fetching of records if
         # the previous fetch return zero records
         self._sleep_interval_seconds = sleep_interval_seconds
