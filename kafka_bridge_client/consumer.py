@@ -57,12 +57,15 @@ class KafkaBridgeConsumer:
         sleep_interval_seconds: int = 2,
         client_timeout_seconds: int = 15,
         headers: t.Dict[str, t.Any] = None,
-        proxy: t.Literal['strimzi', 'confluent'] = 'strimzi'
+        proxy: t.Literal['strimzi', 'confluent'] = 'strimzi',
+        content_type: str = 'application/vnd.kafka.v2+json'
     ) -> None:
+        self._content_type = content_type
         self._group_id = group_id
         self._consumer_name = consumer_name
         self._topics = topics
         self._offsets: t.Dict[str, t.Dict[str, t.Any]] = {}
+        self._proxy = proxy
         if proxy == 'strimzi':
             self._config = {
                 'auto.offset.reset': auto_offset_reset,
@@ -85,6 +88,10 @@ class KafkaBridgeConsumer:
         self._client_timeout_seconds = client_timeout_seconds
         self._headers = headers or {}
 
+    @property
+    def is_strimzi_proxy(self) -> bool:
+        return self._proxy == 'strimzi'
+
     async def _request(
         self,
         method: str,
@@ -98,6 +105,7 @@ class KafkaBridgeConsumer:
         data = data or {}
         _headers = headers or {}
         _headers.update(self._headers)
+        _headers['Content-Type'] = self._content_type
         url = urljoin(self._bootstrap_server, path)
 
         async with aiohttp.ClientSession(
@@ -146,7 +154,6 @@ class KafkaBridgeConsumer:
             'POST',
             self.CONSUMER_PATH.format(group_id=self._group_id),
             data=self._config,
-            headers={'Content-Type': 'application/vnd.kafka.v2+json'},
         )
         if response.status != 200:
             raise exceptions.KafkaBridgeError(
@@ -180,7 +187,6 @@ class KafkaBridgeConsumer:
                 name=self._consumer_name,
             ),
             data={'topics': self._topics},
-            headers={'Content-Type': 'application/vnd.kafka.v2+json'},
         )
 
         if response.status != 204:
@@ -227,9 +233,9 @@ class KafkaBridgeConsumer:
                 name=self._consumer_name,
             ),
             data={'offsets': list(self._offsets.values())},
-            headers={'Content-Type': 'application/vnd.kafka.v2+json'},
         )
-        if response.status != 204:
+        success_status = 204 if self.is_strimzi_proxy else 200
+        if response.status != success_status:
             raise exceptions.KafkaBridgeError(
                 f'status: {response.status}, text: {response.content!r}',
             )
