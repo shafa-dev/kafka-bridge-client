@@ -195,7 +195,9 @@ class KafkaBridgeConsumer:
             )
 
     async def get_records(
-        self, *,
+        self,
+        *,
+        max_bytes: int,
         timeout: int = 10000
     ) -> t.AsyncGenerator[t.Dict[str, t.Any], None]:
         while True:
@@ -205,7 +207,7 @@ class KafkaBridgeConsumer:
                     group_id=self._group_id,
                     name=self._consumer_name,
                 ),
-                params={'timeout': timeout},
+                params={'timeout': timeout, 'max_bytes': max_bytes},
                 headers={'Accept': 'application/vnd.kafka.binary.v2+json'},
             )
             if response.status != 200:
