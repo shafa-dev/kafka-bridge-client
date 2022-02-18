@@ -56,3 +56,12 @@ from kafka_bridge_client import KafkaBridgeProducer
 producer = KafkaBridgeProducer('http://bridge.url' timeout=5)
 producer.send(Message(key='1', value='value'))
 ```
+
+
+## Deploy
+
+You need to change version in `pyproject.toml` and run it
+
+```
+poetry publish --build
+```
