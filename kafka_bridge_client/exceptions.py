@@ -12,3 +12,23 @@ class KafkaBridgeTimeoutError(KafkaBridgeError):
 
 class ConsumerNotFound(KafkaBridgeError):
     pass
+
+
+class KafkaBridgeTopicNotFoundError(KafkaBridgeError):
+    pass
+
+
+class ValidationError(KafkaBridgeError):
+    pass
+
+
+class ValidationError(KafkaBridgeError):
+    pass
+
+
+class KafkaBridgeResourceException(KafkaBridgeError):
+    pass
+
+
+class KafkaBridgeInternalError(KafkaBridgeError):
+    pass

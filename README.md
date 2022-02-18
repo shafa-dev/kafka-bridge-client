@@ -12,6 +12,9 @@ pip install kafka-bridge-client
 
 ## Usage
 By default client use [Strimzi Kafka Bridge](https://github.com/strimzi/strimzi-kafka-bridge) API
+
+`Consumer (async)`
+
 ```python
 from kafka_bridge_client import KafkaBridgeConsumer
 
@@ -42,4 +45,23 @@ consumer2 = KafkaBridgeConsumer(
 async for rec in consumer1.get_records():
     print(rec['value'])
     await consumer.commit()
+```
+
+
+`Producer (sync)`
+
+```python
+from kafka_bridge_client import KafkaBridgeProducer
+
+producer = KafkaBridgeProducer('http://bridge.url' timeout=5)
+producer.send(Message(key='1', value='value'))
+```
+
+
+## Deploy
+
+You need to change version in `pyproject.toml` and run it
+
+```
+poetry publish --build
 ```
