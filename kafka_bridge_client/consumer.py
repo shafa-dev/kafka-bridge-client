@@ -3,6 +3,7 @@ import json
 import typing as t
 from urllib.parse import urljoin
 import signal
+from xxlimited import Str
 
 import aiohttp
 
@@ -51,13 +52,15 @@ class KafkaBridgeConsumer:
         *topics: str,
         bootstrap_server: str,
         group_id: str,
-        auto_offset_reset: t.Literal['earliest', 'latest'],
+        auto_offset_reset: str,
+        # auto_offset_reset: t.Literal['earliest', 'latest'],
         enable_auto_commit: bool,
         consumer_name: str,
         sleep_interval_seconds: int = 2,
         client_timeout_seconds: int = 15,
         headers: t.Dict[str, t.Any] = None,
-        proxy: t.Literal['strimzi', 'confluent'] = 'strimzi',
+        proxy: Str = 'strimzi',
+        # proxy: t.Literal['strimzi', 'confluent'] = 'strimzi',
         content_type: str = 'application/vnd.kafka.v2+json'
     ) -> None:
         self._content_type = content_type
