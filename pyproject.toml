@@ -10,6 +10,7 @@ homepage = "https://github.com/shafa-dev/kafka-bridge-client"
 [tool.poetry.dependencies]
 python = "^3.6"
 aiohttp = "^3.7.4"
+requests = "^2.27.1"
 
 [tool.poetry.dev-dependencies]
 
