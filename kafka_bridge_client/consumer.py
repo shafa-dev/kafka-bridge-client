@@ -59,7 +59,7 @@ class KafkaBridgeConsumer:
         sleep_interval_seconds: int = 2,
         client_timeout_seconds: int = 15,
         headers: t.Dict[str, t.Any] = None,
-        proxy: Str = 'strimzi',
+        proxy: str = 'strimzi',
         # proxy: t.Literal['strimzi', 'confluent'] = 'strimzi',
         content_type: str = 'application/vnd.kafka.v2+json'
     ) -> None:

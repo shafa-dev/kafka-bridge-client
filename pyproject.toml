@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kafka-bridge-client"
-version = "0.4.0"
+version = "0.5.0"
 description = "Python client for Strimzi Kafka Bridge"
 authors = ["Bogdan Zaseka <zaseka.bogdan@gmail.com>"]
 license = "MIT"
