@@ -230,6 +230,39 @@ class KafkaBridgeConsumer:
             if not records:
                 await asyncio.sleep(self._sleep_interval_seconds)
 
+    async def poll_records(
+        self,
+        *,
+        max_bytes: int,
+        timeout: int = 10000
+    ) -> t.List[t.Dict[str, t.Any]]:
+        response = await self._request(
+            'GET',
+            self.RECORDS_PATH.format(
+                group_id=self._group_id,
+                name=self._consumer_name,
+            ),
+            params={'timeout': timeout, 'max_bytes': max_bytes},
+            headers={'Accept': 'application/vnd.kafka.binary.v2+json'},
+        )
+        if response.status != 200:
+            raise exceptions.KafkaBridgeError(
+                f'status: {response.status}, text: {response.content!r}',
+            )
+        records = json.loads(response.content)
+
+        for rec in records:
+            self._offsets[(rec['topic'], rec['partition'])] = {
+                'topic': rec['topic'],
+                'partition': rec['partition'],
+                'offset': rec['offset']
+            }
+
+        if not records:
+            await asyncio.sleep(self._sleep_interval_seconds)
+
+        return records
+
     async def commit(self) -> None:
         response = await self._request(
             'POST',

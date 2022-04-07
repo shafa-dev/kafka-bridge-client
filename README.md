@@ -45,6 +45,12 @@ consumer2 = KafkaBridgeConsumer(
 async for rec in consumer1.get_records():
     print(rec['value'])
     await consumer.commit()
+
+# or
+
+records = await consumer1.poll_records()
+print(records)
+await consumer.commit()
 ```
 
 
