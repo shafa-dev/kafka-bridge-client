@@ -67,7 +67,7 @@ class KafkaBridgeConsumer:
         self._group_id = group_id
         self._consumer_name = consumer_name
         self._topics = topics
-        self._offsets: t.Dict[str, t.Dict[str, t.Any]] = {}
+        self._offsets: t.Dict[t.Tuple[str, str], t.Dict[str, t.Any]] = {}
         self._proxy = proxy
         if proxy == 'strimzi':
             self._config = {
@@ -220,7 +220,7 @@ class KafkaBridgeConsumer:
             records = json.loads(response.content)
 
             for rec in records:
-                self._offsets[rec['topic']] = {
+                self._offsets[(rec['topic'], rec['partition'])] = {
                     'topic': rec['topic'],
                     'partition': rec['partition'],
                     'offset': rec['offset']
