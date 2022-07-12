@@ -67,7 +67,9 @@ class KafkaBridgeProducer:
         if binary:
             data = [
                 {
-                    'key': r.get('key'),
+                    'key': (
+                        r.get('key') and base64.b64encode(str(r.get('key')).encode()).decode()
+                    ),
                     # we need to conver binary data to base64 for success serialization to json
                     'value':
                         base64.b64encode(r.get('value', b'')).decode(),  # type: ignore
